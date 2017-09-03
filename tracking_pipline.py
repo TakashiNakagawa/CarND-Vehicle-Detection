@@ -13,67 +13,57 @@ def learning():
     svc, X_scaler = learning_image.svm_fit()
     learning_image.save_svc(svc, X_scaler)
 
+dist_pickle = pickle.load(open("svc_pickle.p", "rb"))
+svc = dist_pickle["svc"]
+X_scaler = dist_pickle["scaler"]
+orient = dist_pickle["orient"]
+pix_per_cell = dist_pickle["pix_per_cell"]
+cell_per_block = dist_pickle["cell_per_block"]
+spatial_size = dist_pickle["spatial_size"]
+hist_bins = dist_pickle["hist_bins"]
+color_space = dist_pickle["color_space"]
+
+ystart = 350
+ystop = 656
+scale = 1.5
+
 heat_image_total = []
 def process_image(image):
-    dist_pickle = pickle.load(open("svc_pickle.p", "rb"))
-    svc = dist_pickle["svc"]
-    X_scaler = dist_pickle["scaler"]
-    orient = dist_pickle["orient"]
-    pix_per_cell = dist_pickle["pix_per_cell"]
-    cell_per_block = dist_pickle["cell_per_block"]
-    spatial_size = dist_pickle["spatial_size"]
-    hist_bins = dist_pickle["hist_bins"]
-    color_space = dist_pickle["color_space"]
-
-
-
-    ystart = 350
-    ystop = 656
-    scale = 1.5
 
     out_img, boundingbox = hog_subsample.find_cars(image, ystart, ystop, scale, svc,
                             X_scaler, orient, pix_per_cell,
                             cell_per_block, spatial_size, hist_bins)
 
-    # return out_img
-
     heat_image = np.zeros((out_img.shape[0], out_img.shape[1]))
     heat_map.add_heat(heat_image, boundingbox)
+
+    binary = np.zeros((image.shape[0], image.shape[1]))
+    image_tl = np.copy(image)
+    image_tr = out_img
+    image_bl = np.dstack((binary, binary, binary))
+    image_br = np.dstack((binary, binary, binary))
 
     heat_image_total.append(heat_image)
     if len(heat_image_total)>10:
         total = np.sum(heat_image_total, axis=0) / 10.0
-        total = heat_map.apply_threshold(total, 4)
-        # total = total.astype(np.uint8) * 10
+        image_bl = np.dstack((np.copy(total), binary, binary)).astype(np.uint8)*20
+        total = heat_map.apply_threshold(total, 5)
+        image_br = np.dstack((total, binary, binary)).astype(np.uint8)*20
         heat_image_total.pop(0)
-        return labeling.draw_labeled_bboxes(image, total)
+        image_tl = labeling.draw_labeled_bboxes(image, total).astype(np.uint8)
 
-
-        # binary = np.zeros((total.shape[0], total.shape[1]))
-        # result = np.dstack((total, binary, binary))
-        # heat_image_total.pop(0)
-        #
-        #
-        #
-        # return result
-    else:
-        heat_image = heat_map.apply_threshold(heat_image, 4)
-        heat_image = heat_image.astype(np.uint8)*10
-        binary = np.zeros((heat_image.shape[0], heat_image.shape[1]))
-        result = np.dstack((heat_image, binary, binary))
-        # bb = cv2.cvtColor(aa, cv2.COLOR_GRAY2RGB)
-        # plt.imshow(result)
-        # plt.show()
-        return result
-        # return out_img
+    top = cv2.hconcat([image_tl, image_tr]).astype(np.uint8)
+    bottom = cv2.hconcat([image_bl, image_br]).astype(np.uint8)
+    top_bottom = cv2.vconcat([top, bottom])
+    return cv2.resize(top_bottom, None, fx=0.5, fy=0.5)
 
 
 def video():
     from moviepy.editor import VideoFileClip
     white_output = 'project_video_output.mp4'
-    # clip1 = VideoFileClip('test_video.mp4')
-    clip1 = VideoFileClip('project_video.mp4')
-    # white_clip = clip1.fl_image(process_image).subclip(49,50)
+    clip1 = VideoFileClip('test_video.mp4')
+    # clip1 = VideoFileClip('project_video.mp4')
+    # white_clip = clip1.fl_image(process_image).subclip(0.9)
     white_clip = clip1.fl_image(process_image)
     white_clip.write_videofile(white_output, audio=False)
 
