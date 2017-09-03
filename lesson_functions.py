@@ -3,6 +3,23 @@ import numpy as np
 import cv2
 from skimage.feature import hog
 
+def convert_color(img, conv='RGB2YCrCb'):
+    if conv == 'RGB2YCrCb':
+        return cv2.cvtColor(img, cv2.COLOR_RGB2YCrCb)
+    elif conv == 'BGR2YCrCb':
+        return cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+    elif conv == 'RGB2LUV':
+        return cv2.cvtColor(img, cv2.COLOR_RGB2LUV)
+    elif conv == 'RGB2HLS':
+        return cv2.cvtColor(img, cv2.COLOR_RGB2HLS)
+    elif conv == 'RGB2HSV':
+        return cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    elif conv == 'RGB2YUV':
+        return cv2.cvtColor(img, cv2.COLOR_RGB2YUV)
+    elif conv == 'RGB2RGB':
+        return np.copy(img)
+    else:
+        print('unsupported color')
 
 # Define a function to return HOG features and visualization
 def get_hog_features(img, orient, pix_per_cell, cell_per_block,
@@ -13,7 +30,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                                   pixels_per_cell=(pix_per_cell, pix_per_cell),
                                   cells_per_block=(cell_per_block, cell_per_block),
                                   transform_sqrt=True,
-                                  visualise=vis, feature_vector=feature_vec)
+                                  visualise=vis, feature_vector=feature_vec, block_norm='L2-Hys')
         return features, hog_image
     # Otherwise call with one output
     else:
@@ -21,7 +38,7 @@ def get_hog_features(img, orient, pix_per_cell, cell_per_block,
                        pixels_per_cell=(pix_per_cell, pix_per_cell),
                        cells_per_block=(cell_per_block, cell_per_block),
                        transform_sqrt=True,
-                       visualise=vis, feature_vector=feature_vec)
+                       visualise=vis, feature_vector=feature_vec, block_norm='L2-Hys')
         return features
 
 
@@ -60,6 +77,7 @@ def extract_features(imgs, color_space='RGB', spatial_size=(32, 32),
         # Read in each one by one
         image = cv2.imread(file)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = image.astype(np.float32) / 255
         # apply color conversion if other than 'RGB'
         if color_space != 'RGB':
             if color_space == 'HSV':
