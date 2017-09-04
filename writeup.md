@@ -38,7 +38,26 @@ You're reading it!
 
 #### 1. Explain how (and identify where in your code) you extracted HOG features from the training images.
 
-The code for this step is contained in the first code cell of the IPython notebook (or in lines # through # of the file called `some_file.py`).  
+I started by reading in all the 'vehicle' and 'non-vehicle' images by doing this.
+
+```
+cars = glob.glob("../vehicles/*/*.png")  
+notcars = glob.glob("../non-vehicles/*/*.png")
+```
+The code for this setp is contained int the in the lines # 28,29 of the file called 'learning_image.py.
+
+I used HOG parameters same as the lesson.
+
+// まずはデフォルトのままの設定で正答率がどのようになるかを確認した
+// パラメータの設定をした後にtest imageでうまくうごくかどうかを色々調整した
+// ある程度うまくいったので別の画像でやった
+
+
+// test動画から画像を一つ抜き出してその結果がどのようになるかを確認した
+// test動画がうまく動かないのでrbfを採用した
+
+// color spaceをどのようにして選んだか
+
 
 I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
 
@@ -58,6 +77,9 @@ I tried various combinations of parameters and...
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
 I trained a linear SVM using...
+
+// Linear SVMかrbfをどのようにして選んだか
+// 
 
 ### Sliding Window Search
 

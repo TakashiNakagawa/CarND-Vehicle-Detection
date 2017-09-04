@@ -1,5 +1,6 @@
 import glob
 from sklearn.svm import LinearSVC
+from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from lesson_functions import *
 from sklearn.model_selection import train_test_split
@@ -13,8 +14,10 @@ orient = 9  # HOG orientations
 pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
 hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
-spatial_size = (32, 32)  # Spatial binning dimensions
-hist_bins = 32  # Number of histogram bins
+# spatial_size = (32, 32)  # Spatial binning dimensions
+# hist_bins = 32  # Number of histogram bins
+spatial_size = (16, 16)  # Spatial binning dimensions
+hist_bins = 16  # Number of histogram bins
 spatial_feat = True  # Spatial features on or off
 hist_feat = True  # Histogram features on or off
 hog_feat = True  # HOG features on or off
@@ -54,7 +57,9 @@ def svm_fit():
         scaled_X, y, test_size=0.2, random_state=10)
 
     # Use a linear SVC
-    svc = LinearSVC()
+    # svc = LinearSVC()
+    # svc = SVC(kernel='rbf', C=10)
+    svc = SVC(kernel='rbf')
     svc.fit(X_train, y_train)
 
     print('Test Accuracy of SVC = ', round(svc.score(X_test, y_test), 4))

@@ -84,7 +84,7 @@ def find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, ce
                 win_draw = np.int(window * scale)
                 top_left = (xbox_left, ytop_draw + ystart)
                 bottom_right = (xbox_left + win_draw, ytop_draw + win_draw + ystart)
-                cv2.rectangle(draw_img, top_left, bottom_right, (0, 0, 255), 6)
+                # cv2.rectangle(draw_img, top_left, bottom_right, (0, 0, 255), 6)
                 bounding_box.append((top_left, bottom_right))
 
     return draw_img, bounding_box
@@ -95,10 +95,22 @@ if __name__ == '__main__':
     scale = 1.5
 
     img = cv2.imread('./test_images/Screenshot 2017-09-03_21-01-19.png')
+    # img = cv2.imread('./test_images/test3.jpg')
     img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
 
-    out_img, _ = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
-                           hist_bins)
+    # out_img, bounding_box = find_cars(img, ystart, ystop, scale, svc, X_scaler, orient, pix_per_cell, cell_per_block, spatial_size,
+    #                        hist_bins)
+    # for b in bounding_box:
+    #     cv2.rectangle(out_img, b[0], b[1], (0, 0, 255), 6)
+
+    out_img = np.copy(img)
+    for s, color in [(1, (0,0,255)), (1.5, (0,255,0)), (2, (255,0,0))]:
+        _, boundingbox_tmp = find_cars(img, ystart, ystop, s, svc,
+                                X_scaler, orient, pix_per_cell,
+                                cell_per_block, spatial_size, hist_bins)
+        # boundingbox.extend(boundingbox_tmp)
+        for b in boundingbox_tmp:
+            cv2.rectangle(out_img, b[0], b[1], color, 6)
 
     plt.imshow(out_img)
     plt.show()
