@@ -1,15 +1,5 @@
 from scipy.ndimage.measurements import label
 
-
-
-# heatmap = threshold(heatmap, 2)
-# labels = label(heatmap)
-# print(labels[1], 'cars found')
-# plt.imshow(labels[0], cmap='gray')
-
-
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
 import numpy as np
 import cv2
 
@@ -28,10 +18,3 @@ def draw_labeled_bboxes(img, heatmap):
         cv2.rectangle(img, bbox[0], bbox[1], (0,0,255), 6)
     # Return the image
     return img
-
-# # Read in the last image above
-# image = mpimg.imread('img105.jpg')
-# # Draw bounding boxes on a copy of the image
-# draw_img = draw_labeled_bboxes(np.copy(image), labels)
-# # Display the image
-# plt.imshow(draw_img)

@@ -1,10 +1,6 @@
 import learning_image
 import hog_subsample
-import matplotlib.image as mpimg
-import matplotlib.pyplot as plt
-import numpy as np
 import pickle
-import cv2
 from lesson_functions import *
 import heat_map
 import labeling
@@ -25,9 +21,7 @@ color_space = dist_pickle["color_space"]
 
 ystart = 350
 ystop = 656
-# scale = 1.5
-# scale = 2
-scale = 1
+
 
 heat_image_total = []
 def process_image(image):
@@ -68,24 +62,10 @@ def process_image(image):
 def video():
     from moviepy.editor import VideoFileClip
     white_output = 'project_video_output.mp4'
-    # clip1 = VideoFileClip('test_video.mp4')
     clip1 = VideoFileClip('project_video.mp4')
-    # white_clip = clip1.fl_image(process_image).subclip(0.9)
     white_clip = clip1.fl_image(process_image)
     white_clip.write_videofile(white_output, audio=False)
 
 if __name__ == '__main__':
     # learning()
-    # img = cv2.imread('./test_images/test6.jpg')
-    # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    # process_image(img)
     video()
-    # 事前に学習を行う
-
-    # 画像を一枚取得する
-
-    # 車領域を見つける
-
-    # 過去複数フレームでも一致するかを確認
-
-    # 確定したら実際に画像に書き出して動画を作成

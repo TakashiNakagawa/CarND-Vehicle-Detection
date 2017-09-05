@@ -1,24 +1,19 @@
 import glob
-from sklearn.svm import LinearSVC
 from sklearn.svm import SVC
 from sklearn.preprocessing import StandardScaler
 from lesson_functions import *
 from sklearn.model_selection import train_test_split
 import numpy as np
 import pickle
-import cv2
 
 
 color_space = 'YCrCb'  # Can be RGB, HSV, LUV, HLS, YUV, YCrCb
-# orient = 9  # HOG orientations
 orient = 11  # HOG orientations
 pix_per_cell = 8  # HOG pixels per cell
 cell_per_block = 2  # HOG cells per block
 hog_channel = "ALL"  # Can be 0, 1, 2, or "ALL"
 spatial_size = (32, 32)  # Spatial binning dimensions
 hist_bins = 32  # Number of histogram bins
-# spatial_size = (16, 16)  # Spatial binning dimensions
-# hist_bins = 16  # Number of histogram bins
 spatial_feat = True  # Spatial features on or off
 hist_feat = True  # Histogram features on or off
 hog_feat = True  # HOG features on or off
@@ -28,11 +23,6 @@ def svm_fit():
     # Read in cars and notcars
     cars = glob.glob("../vehicles/*/*.png")
     notcars = glob.glob("../non-vehicles/*/*.png")
-
-    # todo:
-    # sample_size = 500
-    # cars = cars[0:sample_size]
-    # notcars = notcars[0:sample_size]
 
     car_features = extract_features(cars, color_space=color_space,
                                     spatial_size=spatial_size, hist_bins=hist_bins,
@@ -57,9 +47,6 @@ def svm_fit():
     X_train, X_test, y_train, y_test = train_test_split(
         scaled_X, y, test_size=0.2, random_state=10)
 
-    # Use a linear SVC
-    # svc = LinearSVC()
-    # svc = SVC(kernel='rbf', C=10)
     svc = SVC(kernel='rbf')
     svc.fit(X_train, y_train)
 
