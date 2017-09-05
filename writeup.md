@@ -109,7 +109,7 @@ The code for this step is contained in the lines # 22-59 of the file called 'lea
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
-Scale 2 was well detected near side of the camera, but far side not. So I used three scales of 1, 1.5, 2. And used about half of the image(y=350-720). Other parameters were the same as the lesson. So overlap was 75%.  
+Scale 2 was well detected near side of the camera, but far side not. So I used three scales of 1, 1.5, 2. And used about half of the image(y=350-656). Other parameters were the same as the lesson. So overlap was 75%.  
 
 Below image is the sliding result. Blue is scale 1, green is scale 1.5, red is 2 (though which is not shown).
 ![alt text][img11]
