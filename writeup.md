@@ -131,6 +131,7 @@ below image was corresponding these 4 steps.
 - the bottom right image is step3
 
 ![alt text][img12]
+my video also consists of these 4 images.  
 
 
 To stable the result, I averaged frames and adjusted threshold value.  
