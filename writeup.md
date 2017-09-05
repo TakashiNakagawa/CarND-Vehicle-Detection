@@ -23,6 +23,16 @@ The goals / steps of this project are the following:
 [image6]: ./examples/labels_map.png
 [image7]: ./examples/output_bboxes.png
 [video1]: ./project_video.mp4
+[img1]: ./output_images/car_notcar_image.png
+[img2]: ./output_images/car_hog.png
+[img3]: ./output_images/notcar_hog.png
+[img4]: ./output_images/test6.jpg
+[img5]: ./output_images/colorspace_hsv.png
+[img6]: ./output_images/colorspace_hls.png
+[img7]: ./output_images/colorspace_luv.png
+[img8]: ./output_images/colorspace_rgb.png
+[img9]: ./output_images/colorspace_ycc.png
+[img10]: ./output_images/colorspace_yuv.png
 
 ## [Rubric](https://review.udacity.com/#!/rubrics/513/view) Points
 ### Here I will consider the rubric points individually and describe how I addressed each point in my implementation.  
@@ -44,47 +54,76 @@ I started by reading in all the 'vehicle' and 'non-vehicle' images by doing this
 cars = glob.glob("../vehicles/*/*.png")  
 notcars = glob.glob("../non-vehicles/*/*.png")
 ```
-The code for this setp is contained int the in the lines # 28,29 of the file called 'learning_image.py.
+The code for this setp is contained int the in the lines # 28,29 of the file called 'learning_image.py'.
 
-I used HOG parameters same as the lesson.
+Here is sample images of car and notcar.
+![alt text][img1]
 
-// まずはデフォルトのままの設定で正答率がどのようになるかを確認した
-// パラメータの設定をした後にtest imageでうまくうごくかどうかを色々調整した
-// ある程度うまくいったので別の画像でやった
+I checked 6 type of color space.
+test6.jpg contained black and white cars. So if black and white were clearly separated from other colors, it was prefereable color space.
+It was hard to say which color space was good from blow result, but YCrCb and YUV seemd good because balck and white color were grouped. So I chose YCrCb color space for this project.  
+
+test6 image
+![alt text][img4]
+RGB color space  
+![alt text][img8]
+HSV color space
+![alt text][img5]
+LUV color space
+![alt text][img7]
+HLS color space
+![alt text][img6]
+YCrCb color space
+![alt text][img9]
+YUV color space
+![alt text][img10]
 
 
-// test動画から画像を一つ抜き出してその結果がどのようになるかを確認した
-// test動画がうまく動かないのでrbfを採用した
+HOG features were extracted according order.
 
-// color spaceをどのようにして選んだか
+1. converted to RGB to YCrCb color space
+2. scale between 0 - 1
+3. each channel
 
-
-I started by reading in all the `vehicle` and `non-vehicle` images.  Here is an example of one of each of the `vehicle` and `non-vehicle` classes:
-
-![alt text][image1]
-
-I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+The code for this setp is contained int the in the lines # 28,29 of the file called 'hog_sample.py'.
 
 Here is an example using the `YCrCb` color space and HOG parameters of `orientations=8`, `pixels_per_cell=(8, 8)` and `cells_per_block=(2, 2)`:
 
+![alt text][img2]  
 
-![alt text][image2]
+![alt text][img3]
+
+
+I then explored different color spaces and different `skimage.hog()` parameters (`orientations`, `pixels_per_cell`, and `cells_per_block`).  I grabbed random images from each of the two classes and displayed them to get a feel for what the `skimage.hog()` output looks like.
+
 
 #### 2. Explain how you settled on your final choice of HOG parameters.
 
-I tried various combinations of parameters and...
+I only tried only these combinations.  
+orient = 9, px_per_cell = 8, cell_per_block = 2
+orient = 11, px_per_cell = 8, cell_per_block = 2 --> 0.9865
+from final result of video, I choose orient 9.
+
+
 
 #### 3. Describe how (and identify where in your code) you trained a classifier using your selected HOG features (and color features if you used them).
 
+グラフをつなげた絵を表示する
+colorと通常の画像をつなげた
+トレーニングデータでは99%を超えたが、実際の動画ではfalse positiveが多かった。そこで、rbfを使う事にした
 I trained a linear SVM using...
 
 // Linear SVMかrbfをどのようにして選んだか
-// 
+//
 
 ### Sliding Window Search
 
 #### 1. Describe how (and identify where in your code) you implemented a sliding window search.  How did you decide what scales to search and how much to overlap windows?
 
+scaleを1, 1.5, 2を試した。
+パラメータはレッスンのものをそのまま利用したが、テスト画像で十分に車を認識出来ていたのでそのまま利用した。
+
+3種類の色のついた画像を表示する
 I decided to search random window positions at random scales all over the image and came up with this (ok just kidding I didn't actually ;):
 
 ![alt text][image3]

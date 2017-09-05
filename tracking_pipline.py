@@ -54,7 +54,7 @@ def process_image(image):
     if len(heat_image_total)>10:
         total = np.sum(heat_image_total, axis=0) / 10.0
         image_bl = np.dstack((np.copy(total), binary, binary)).astype(np.uint8)*5
-        total = heat_map.apply_threshold(total, 8)
+        total = heat_map.apply_threshold(total, 5)
         image_br = np.dstack((total, binary, binary)).astype(np.uint8)*5
         heat_image_total.pop(0)
         image_tl = labeling.draw_labeled_bboxes(image, total).astype(np.uint8)
